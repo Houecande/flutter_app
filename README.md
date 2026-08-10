@@ -1,17 +1,16 @@
-# flutter_app
+# Multi-screen Flutter Project
 
-A new Flutter project.
+Il s'agit d'une application Flutter multi-écrans permettant de découvrir et de soumettre des projets open-source.
 
-## Getting Started
+## 🚀 Fonctionnalités
+- **Accueil** : Présentation et accès rapide.
+- **Liste & Filtres** : Recherche dynamique par texte et filtre par catégorie (Web, Mobile).
+- **Détails** : Affichage complet du projet sélectionné via paramètre d'URL.
+- **Formulaire de soumission** : Validation complète sur 4 champs (Titre, Description, Catégorie, Tags).
+- **Mode Sombre / Clair** : Basculement dynamique du thème.
+- **Design Responsive** : Bascule automatique entre liste (Mobile) et grille (Tablette).
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Stack Technique
+- **Flutter** & **Dart**
+- **GoRouter** (Navigation déclarative)
+- **Material 3**
