@@ -14,3 +14,17 @@ Il s'agit d'une application Flutter multi-écrans permettant de découvrir et de
 - **Flutter** & **Dart**
 - **GoRouter** (Navigation déclarative)
 - **Material 3**
+
+## 📐 Architecture & Séparation des Responsabilités
+
+L'application suit une **architecture en couches découplée (Layer-First)** pour garantir maintenabilité et testabilité :
+
+```text
+lib/
+├── constants/     # Constantes d'application (chaînes, dimensions)
+├── models/        # Modèles de données (Project)
+├── repository/    # Gestionnaire de données & logique de filtrage (ProjectRepository)
+├── router/        # Routing déclaratif avec GoRouter
+├── screens/       # Vues principales de l'application
+├── theme/         # Configuration des thèmes Light / Dark (Material 3)
+└── widgets/       # Composants UI réutilisables (Cards, Buttons, Chips, States)

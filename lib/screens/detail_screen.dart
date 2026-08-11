@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
-import '../models/project.dart';
+import '../constants/app_strings.dart';
+import '../repository/project_repository.dart';
+import '../widgets/empty_state_widget.dart';
 import '../widgets/tag_chip.dart';
 
 class DetailScreen extends StatelessWidget {
   final String projectId;
+  final ProjectRepository repository;
 
-  const DetailScreen({super.key, required this.projectId});
+  const DetailScreen({
+    super.key,
+    required this.projectId,
+    required this.repository,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final project = mockProjects.firstWhere(
-      (p) => p.id == projectId,
-      orElse: () => const Project(
-        id: '0',
-        title: 'Introuvable',
-        description: '',
-        category: '',
-        tags: [],
-        stars: 0,
-        imageUrl: '',
-      ),
-    );
+    final project = repository.getProjectById(projectId);
 
-    if (project.id == '0') {
+    // Gestion propre des erreurs (Suggestion 3)
+    if (project == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Erreur')),
-        body: const Center(child: Text('Projet introuvable.')),
+        body: const EmptyStateWidget(
+          message: AppStrings.projectNotFound,
+          icon: Icons.error_outline,
+        ),
       );
     }
 
@@ -40,6 +40,11 @@ class DetailScreen extends StatelessWidget {
               height: 250,
               width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                height: 250,
+                color: Colors.grey.shade800,
+                child: const Icon(Icons.code, size: 80),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -67,7 +72,10 @@ class DetailScreen extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(height: 8),
-                  Text(project.description, style: Theme.of(context).textTheme.bodyLarge),
+                  Text(
+                    project.description,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                   const SizedBox(height: 20),
                   const Text('Technologies :', style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),

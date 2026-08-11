@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/project.dart';
+import '../constants/app_strings.dart';
+import '../repository/project_repository.dart';
+import '../widgets/empty_state_widget.dart';
 import '../widgets/project_card.dart';
 
 class ListScreen extends StatefulWidget {
-  const ListScreen({super.key});
+  final ProjectRepository repository;
+
+  const ListScreen({super.key, required this.repository});
 
   @override
   State<ListScreen> createState() => _ListScreenState();
@@ -12,51 +16,53 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   String _searchQuery = '';
-  String _selectedCategory = 'Tous';
+  String _selectedCategory = AppStrings.categoryAll;
+  String _sortBy = 'stars'; // 'stars' ou 'title'
 
   @override
   Widget build(BuildContext context) {
-    final categories = ['Tous', 'Web', 'Mobile'];
+    final categories = [AppStrings.categoryAll, 'Web', 'Mobile'];
+    final filteredProjects = widget.repository.filterProjects(
+      query: _searchQuery,
+      category: _selectedCategory,
+      sortBy: _sortBy,
+    );
 
-    final filteredProjects = mockProjects.where((p) {
-      final matchesSearch = p.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.description.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesCategory = _selectedCategory == 'Tous' || p.category == _selectedCategory;
-      return matchesSearch && matchesCategory;
-    }).toList();
-
-    // Détection si l'écran est large (Tablette / PC)
     final isTabletOrDesktop = MediaQuery.of(context).size.width >= 600;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Projets'),
+        title: const Text('Projets Open Source'),
         actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.sort),
+            tooltip: 'Trier par',
+            onSelected: (val) => setState(() => _sortBy = val),
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'stars', child: Text('Trier par Étoiles')),
+              const PopupMenuItem(value: 'title', child: Text('Trier par Nom')),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.add),
-            tooltip: 'Ajouter un projet',
+            tooltip: AppStrings.addProjectBtn,
             onPressed: () => context.go('/add-project'),
           )
         ],
       ),
       body: Column(
         children: [
-          // Barre de recherche
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Rechercher un projet...',
+                hintText: AppStrings.searchHint,
                 prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
               onChanged: (val) => setState(() => _searchQuery = val),
             ),
           ),
-          
-          // Filtres de catégories
           SizedBox(
             height: 40,
             child: ListView.builder(
@@ -78,17 +84,15 @@ class _ListScreenState extends State<ListScreen> {
             ),
           ),
           const SizedBox(height: 10),
-
-          // Liste ou Grille de cartes
           Expanded(
             child: filteredProjects.isEmpty
-                ? const Center(child: Text('Aucun projet trouvé.'))
+                ? const EmptyStateWidget(message: AppStrings.noProjects)
                 : isTabletOrDesktop
                     ? GridView.builder(
                         padding: const EdgeInsets.all(12),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 1.45, // Ratio ajusté pour des cartes compactes sur PC
+                          childAspectRatio: 1.45,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
                         ),
