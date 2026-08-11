@@ -16,6 +16,14 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   final _tagsController = TextEditingController();
   String _selectedCategory = 'Web';
 
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descController.dispose();
+    _tagsController.dispose();
+    super.dispose();
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,7 +79,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(
                   labelText: 'Catégorie',
                   border: OutlineInputBorder(),
@@ -79,7 +87,11 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                 items: ['Web', 'Mobile', 'Desktop']
                     .map((cat) => DropdownMenuItem(value: cat, child: Text(cat)))
                     .toList(),
-                onChanged: (val) => setState(() => _selectedCategory = val!),
+                onChanged: (val) {
+                  if (val != null) {
+                    setState(() => _selectedCategory = val);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               TextFormField(

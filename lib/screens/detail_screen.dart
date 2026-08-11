@@ -18,7 +18,6 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final project = repository.getProjectById(projectId);
 
-    // Gestion propre des erreurs (Suggestion 3)
     if (project == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Erreur')),
@@ -40,7 +39,7 @@ class DetailScreen extends StatelessWidget {
               height: 250,
               width: double.infinity,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (_, _, _) => Container(
                 height: 250,
                 color: Colors.grey.shade800,
                 child: const Icon(Icons.code, size: 80),
@@ -77,7 +76,10 @@ class DetailScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 20),
-                  const Text('Technologies :', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Technologies :',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
