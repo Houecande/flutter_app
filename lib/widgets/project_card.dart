@@ -20,6 +20,7 @@ class ProjectCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Column(
+          mainAxisSize: MainAxisSize.min, // <-- Empêche l'étirement vertical inutile
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
@@ -29,7 +30,7 @@ class ProjectCard extends StatelessWidget {
                   height: 140,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
+                  errorBuilder: (context, error, stackTrace) => Container(
                     height: 140,
                     color: Colors.grey.shade800,
                     child: const Icon(Icons.code, size: 50),
@@ -41,7 +42,7 @@ class ProjectCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.black70,
+                      color: Colors.black.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -62,6 +63,7 @@ class ProjectCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(
+                mainAxisSize: MainAxisSize.min, // <-- Aligne le texte et les tags de manière compacte
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -80,6 +82,7 @@ class ProjectCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 6,
+                    runSpacing: 4,
                     children: project.tags.map((t) => TagChip(label: t)).toList(),
                   ),
                 ],

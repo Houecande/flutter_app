@@ -25,7 +25,8 @@ class _ListScreenState extends State<ListScreen> {
       return matchesSearch && matchesCategory;
     }).toList();
 
-    final isTablet = MediaQuery.of(context).size.width >= 600;
+    // Détection si l'écran est large (Tablette / PC)
+    final isTabletOrDesktop = MediaQuery.of(context).size.width >= 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,33 +34,40 @@ class _ListScreenState extends State<ListScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
+            tooltip: 'Ajouter un projet',
             onPressed: () => context.go('/add-project'),
           )
         ],
       ),
       body: Column(
         children: [
+          // Barre de recherche
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Rechercher un projet...',
                 prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onChanged: (val) => setState(() => _searchQuery = val),
             ),
           ),
+          
+          // Filtres de catégories
           SizedBox(
             height: 40,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               itemCount: categories.length,
               itemBuilder: (context, index) {
                 final cat = categories[index];
                 final isSelected = _selectedCategory == cat;
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: FilterChip(
                     label: Text(cat),
                     selected: isSelected,
@@ -70,15 +78,17 @@ class _ListScreenState extends State<ListScreen> {
             ),
           ),
           const SizedBox(height: 10),
+
+          // Liste ou Grille de cartes
           Expanded(
             child: filteredProjects.isEmpty
                 ? const Center(child: Text('Aucun projet trouvé.'))
-                : isTablet
+                : isTabletOrDesktop
                     ? GridView.builder(
                         padding: const EdgeInsets.all(12),
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 1.1,
+                          childAspectRatio: 1.45, // Ratio ajusté pour des cartes compactes sur PC
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
                         ),
