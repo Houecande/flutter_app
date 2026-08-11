@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../repository/project_repository.dart';
 import '../screens/home_screen.dart';
 import '../screens/list_screen.dart';
 import '../screens/detail_screen.dart';
 import '../screens/add_project_screen.dart';
 
-GoRouter createRouter(VoidCallback onToggleTheme) {
+GoRouter createRouter(VoidCallback onToggleTheme, ProjectRepository repository) {
   return GoRouter(
     initialLocation: '/',
     routes: [
@@ -15,13 +16,13 @@ GoRouter createRouter(VoidCallback onToggleTheme) {
       ),
       GoRoute(
         path: '/projects',
-        builder: (context, state) => const ListScreen(),
+        builder: (context, state) => ListScreen(repository: repository),
       ),
       GoRoute(
         path: '/projects/:id',
         builder: (context, state) {
           final id = state.pathParameters['id']!;
-          return DetailScreen(projectId: id);
+          return DetailScreen(projectId: id, repository: repository);
         },
       ),
       GoRoute(

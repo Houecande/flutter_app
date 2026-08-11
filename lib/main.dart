@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'repository/project_repository.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -15,6 +16,7 @@ class DevHubApp extends StatefulWidget {
 
 class _DevHubAppState extends State<DevHubApp> {
   ThemeMode _themeMode = ThemeMode.system;
+  final ProjectRepository _repository = ProjectRepository();
 
   void _toggleTheme() {
     setState(() {
@@ -24,7 +26,7 @@ class _DevHubAppState extends State<DevHubApp> {
 
   @override
   Widget build(BuildContext context) {
-    final router = createRouter(_toggleTheme);
+    final router = createRouter(_toggleTheme, _repository);
 
     return MaterialApp.router(
       title: 'DevHub',
